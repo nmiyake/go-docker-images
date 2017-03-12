@@ -21,4 +21,4 @@ A combination of the `golang:1.7` and `golang:1.8` images. The Go 1.7 directory 
 
 go-1.8-rpm-fpm
 --------------
-Docker image based on `golang:1.8` that also has `rpm` and `fpm` installed.
+Docker image based on `golang:1.8` that also has `rpm` and `fpm` installed. The image is set to run as the user "gouser" rather than root.
