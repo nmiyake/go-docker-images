@@ -2,7 +2,7 @@ machine:
   services:
     - docker
   environment:
-    MIN_CIRCLE_NODES: 3
+    MIN_CIRCLE_NODES: 4
   post:
     - if (( $CIRCLE_NODE_TOTAL < $MIN_CIRCLE_NODES )); then echo "Build requires at least $MIN_CIRCLE_NODES nodes, was ${CIRCLE_NODE_TOTAL}"; false; fi
 
@@ -11,15 +11,17 @@ test:
     - ? |
         case $CIRCLE_NODE_INDEX in
           0)
-            cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.6 && docker build . && \
+            cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.6 && docker build .
+            ;;
+          1)
             cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.7-1.8 && docker build . && \
             cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.7.5 && docker build .
             ;;
-          1)
+          2)
             cd ~/$CIRCLE_PROJECT_REPONAME/go-1.7-1.8 && docker build . && \
             cd ~/$CIRCLE_PROJECT_REPONAME/go-1.8-rpm-fpm && docker build .
             ;;
-          2)
+          3)
             cd ~/$CIRCLE_PROJECT_REPONAME/brew-go && docker build .
             ;;
           *)
