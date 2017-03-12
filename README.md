@@ -21,4 +21,4 @@ A combination of the `golang:1.7` and `golang:1.8` images. The Go 1.7 directory 
 
 go-1.8-rpm-fpm
 --------------
-Docker image based on `golang:1.8` that also has `rpm` and `fpm` installed. The image is set to run as the user "gouser" rather than root.
+Docker image based on `golang:1.8` that also has `rpm` and `fpm` installed. The user creates a user called `gouser`. By default, this user is not used (the container is still run as `root` by default). However, the image contains a script called `/run-as-gouser.sh` that can be used to run the provided commands as `gouser`. The `USER_ID` environment variable can be used to set the UID of `gouser`.
