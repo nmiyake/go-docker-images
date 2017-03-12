@@ -19,11 +19,11 @@ test:
             cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.7-1.8 && docker build .
             ;;
           2)
-            cd ~/$CIRCLE_PROJECT_REPONAME/go-1.7-1.8 && docker build . && \
-            cd ~/$CIRCLE_PROJECT_REPONAME/go-1.8-rpm-fpm && docker build .
+            cd ~/$CIRCLE_PROJECT_REPONAME/go-1.7-1.8 && docker build .
             ;;
           3)
-            cd ~/$CIRCLE_PROJECT_REPONAME/brew-go && docker build .
+            cd ~/$CIRCLE_PROJECT_REPONAME/brew-go && docker build . && \
+            cd ~/$CIRCLE_PROJECT_REPONAME/go-1.8-rpm-fpm && docker build .
             ;;
           *)
             echo "Unexpected node $CIRCLE_NODE_INDEX"
