@@ -1,33 +1,31 @@
 machine:
   services:
     - docker
-  environment:
-    MIN_CIRCLE_NODES: 4
-  post:
-    - if (( $CIRCLE_NODE_TOTAL < $MIN_CIRCLE_NODES )); then echo "Build requires at least $MIN_CIRCLE_NODES nodes, was ${CIRCLE_NODE_TOTAL}"; false; fi
+
+dependencies:
+  override:
+    - docker info
 
 test:
   override:
-    - ? |
-        case $CIRCLE_NODE_INDEX in
-          0)
-            cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.6 && docker build . && \
-            cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.7.5 && docker build . && \
-            cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.8.0 && docker build .
-            ;;
-          1)
-            cd ~/$CIRCLE_PROJECT_REPONAME/alpine-go-1.7-1.8 && docker build .
-            ;;
-          2)
-            cd ~/$CIRCLE_PROJECT_REPONAME/go-1.7-1.8 && docker build .
-            ;;
-          3)
-            cd ~/$CIRCLE_PROJECT_REPONAME/brew-go && docker build . && \
-            cd ~/$CIRCLE_PROJECT_REPONAME/go-1.8-rpm-fpm && docker build .
-            ;;
-          *)
-            echo "Unexpected node $CIRCLE_NODE_INDEX"
-            ;;
-        esac
-      :
-          parallel: true
+    - ./alpine-go-1.7-1.8-template/build.sh
+    - ./alpine-go-template/build.sh
+    - ./brew-go/build.sh
+    - ./go-1.7-1.8-template/build.sh
+    - ./go-rpm-fpm-template/build.sh
+  post:
+    - |
+      SUBDIRS=$(echo */)
+      for currDir in $SUBDIRS; do
+        currImagesDir="${currDir}images/" && \
+        if [ -d "$currImagesDir" ]; then
+          mkdir -p "$CIRCLE_ARTIFACTS/$currDir" && \
+          cp -r "$currImagesDir"* "$CIRCLE_ARTIFACTS/$currDir"
+        fi
+      done
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - ./publish-tags.sh

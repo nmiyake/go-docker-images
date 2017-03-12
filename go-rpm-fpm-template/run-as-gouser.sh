@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 # set the UID of gouser to be the value of $USER_ID
 if [ "$(id -u gouser)" -ne "$USER_ID" ]; then
