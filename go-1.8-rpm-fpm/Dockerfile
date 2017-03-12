@@ -6,8 +6,9 @@ RUN apt-get -y install ruby-dev
 RUN apt-get -y install rubygems
 RUN gem install fpm
 
-RUN adduser gouser
+ENV USER_ID 1000
+RUN adduser gouser --uid $USER_ID
 RUN chown -R gouser /go
 
-WORKDIR /go
-USER gouser
+COPY ./run-as-gouser.sh /
+RUN chmod +x /run-as-gouser.sh
