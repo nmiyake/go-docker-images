@@ -12,6 +12,7 @@ test:
     - ./alpine-go-template/build.sh
     - ./brew-go/build.sh
     - ./go-1.7-1.8-template/build.sh
+    - ./go-docker-template/build.sh
     - ./go-rpm-fpm-template/build.sh
   post:
     - |
