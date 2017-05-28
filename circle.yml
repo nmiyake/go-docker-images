@@ -5,28 +5,15 @@ machine:
 dependencies:
   override:
     - docker info
+    - go get github.com/nmiyake/dockergen
 
 test:
   override:
-    - ./alpine-go-1.7-1.8-template/build.sh
-    - ./alpine-go-template/build.sh
-    - ./brew-go/build.sh
-    - ./go-1.7-1.8-template/build.sh
-    - ./go-docker-template/build.sh
-    - ./go-rpm-fpm-template/build.sh
-  post:
-    - |
-      SUBDIRS=$(echo */)
-      for currDir in $SUBDIRS; do
-        currImagesDir="${currDir}images/" && \
-        if [ -d "$currImagesDir" ]; then
-          mkdir -p "$CIRCLE_ARTIFACTS/$currDir" && \
-          cp -r "$currImagesDir"* "$CIRCLE_ARTIFACTS/$currDir"
-        fi
-      done
+    - dockergen --config config.yml build
+
 deployment:
   hub:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - ./publish-tags.sh
+      - dockergen --config config.yml push
