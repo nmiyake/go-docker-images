@@ -28,6 +28,9 @@ builds:
   go-1.7-1.8:
     docker-template: go-1.7-1.8-template/Dockerfile_template.txt
     tag: nmiyake/go:go-{{.GO_1_7_VERSION}}-{{.GO_1_8_VERSION}}
+  go-darwin-linux:
+    docker-template: go-darwin-linux/Dockerfile_template.txt
+    tag: nmiyake/go:go-darwin-linux-{{.GO_1_8_VERSION}}
   go-docker:
     docker-template: go-docker-template/Dockerfile_template.txt
     tag: nmiyake/go:go-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}
