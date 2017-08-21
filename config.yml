@@ -2,6 +2,7 @@ build-id-var: CIRCLE_BUILD_NUM
 tag-suffix: -t{{BuildID}}
 template-vars:
   CURRENT_GO_VERSION: 1.8.3
+  GODEL_VERSION: 0.21.0
   GO_1_8_VERSION: 1.8.3
   GO_1_7_VERSION: 1.7.6
   DOCKER_VERSION: 17.03.0-ce
@@ -28,10 +29,13 @@ builds:
     tag: nmiyake/go:go-{{.GO_1_7_VERSION}}-{{.GO_1_8_VERSION}}
   go-darwin-linux:
     docker-template: go-darwin-linux/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-{{.GO_1_8_VERSION}}
+    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}
   go-docker:
     docker-template: go-docker-template/Dockerfile_template.txt
     tag: nmiyake/go:go-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}
+  go-godel:
+    docker-template: go-godel/Dockerfile_template.txt
+    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-godel-{{.GODEL_VERSION}}
   go-rpm-fpm:
     docker-template: go-rpm-fpm-template/Dockerfile_template.txt
     tag: nmiyake/go:go-{{.CURRENT_GO_VERSION}}-rpm-fpm
