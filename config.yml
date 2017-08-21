@@ -4,7 +4,6 @@ template-vars:
   CURRENT_GO_VERSION: 1.8.3
   GO_1_8_VERSION: 1.8.3
   GO_1_7_VERSION: 1.7.6
-  GO_1_6_VERSION: 1.6.4
   DOCKER_VERSION: 17.03.0-ce
   GO_1_8_SRC_SHA256: 5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
   GO_1_8_LINUX_AMD64_SHA256: 1862f4c3d3907e59b04a757cfda0ea7aa9ef39274af99a784f5be843c80c6772
@@ -21,7 +20,6 @@ builds:
       GO_VERSION:
         - "{{.GO_1_8_VERSION}}"
         - "{{.GO_1_7_VERSION}}"
-        - "{{.GO_1_6_VERSION}}"
   brew-go:
     docker-template: brew-go/Dockerfile_template.txt
     tag: nmiyake/go:brew-go
