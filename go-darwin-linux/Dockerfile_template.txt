@@ -1,3 +1,3 @@
-FROM golang:{{.GO_1_8_VERSION}}
+FROM golang:{{.CURRENT_GO_VERSION}}
 
 RUN GOOS=darwin GOARCH=amd64 go install std
