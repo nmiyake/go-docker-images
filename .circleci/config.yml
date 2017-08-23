@@ -3,6 +3,28 @@ defaults: &defaults
   docker:
     - image: nmiyake/go:go-1.8.3-docker-17.03.0-ce-t52
 
+custom-build-num: &custom-build-num
+  run: echo "export CUSTOM_BUILD_NUM=$(($(git rev-list --count HEAD)+80))" >> $BASH_ENV
+
+run-docker-gen: &run-docker-gen
+  run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
+
+docker-save: &docker-save
+  run: |
+       mkdir -p /tmp/docker-cache
+       docker save -o /tmp/docker-cache/docker-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tags $IMAGE)
+
+create-cache-key: &create-cache-key
+  run: echo "$IMAGE-$CIRCLE_SHA1" > /tmp/$IMAGE-cache_key.txt
+
+docker-load: &docker-load
+  run: docker load -i /tmp/docker-cache/docker-images.tar
+
+docker-publish: &docker-publish
+  run: |
+       docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+       go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml push $IMAGE
+
 version: 2
 jobs:
   alpine-go:
@@ -11,172 +33,323 @@ jobs:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=alpine-go' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/alpine-go-cache_key.txt" }}
           paths:
-            - alpine-go-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  alpine-go-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=alpine-go' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/alpine-go-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   alpine-go-1.7-1.8:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=alpine-go-1.7-1.8' >> $BASH_ENV
-      - run: echo $IMAGE
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/alpine-go-1.7-1.8-cache_key.txt" }}
           paths:
-            - alpine-go-1.7-1.8-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  alpine-go-1.7-1.8-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=alpine-go-1.7-1.8' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/alpine-go-1.7-1.8-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   brew-go:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=brew-go' >> $BASH_ENV
-      - run: echo $IMAGE
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/brew-go-cache_key.txt" }}
           paths:
-            - brew-go-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  brew-go-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=brew-go' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/brew-go-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-1.7-1.8:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=go-1.7-1.8' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-1.7-1.8-cache_key.txt" }}
           paths:
-            - go-1.7-1.8-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  go-1.7-1.8-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-1.7-1.8' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-1.7-1.8-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-darwin-linux:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=go-darwin-linux' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-cache_key.txt" }}
           paths:
-            - go-darwin-linux-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  go-darwin-linux-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-darwin-linux-no-cgo:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=go-darwin-linux-no-cgo' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-cache_key.txt" }}
           paths:
-            - go-darwin-linux-no-cgo-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  go-darwin-linux-no-cgo-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-no-cgo' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-docker:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=go-docker' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-docker-cache_key.txt" }}
           paths:
-            - go-docker-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  go-docker-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-docker' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-docker-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-godel:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=go-godel' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-godel-cache_key.txt" }}
           paths:
-            - go-godel-images.tar
+            - /tmp/docker-cache/docker-images.tar
+  go-godel-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-godel' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-godel-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-rpm-fpm:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
       - run: echo 'export IMAGE=go-rpm-fpm' >> $BASH_ENV
-      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build $IMAGE
-      - run: |
-             mkdir -p docker-cache
-             docker save -o docker-cache/$IMAGE-images.tar $(go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml tag $IMAGE)
-      - persist_to_workspace:
-          root: docker-cache
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-rpm-fpm-cache_key.txt" }}
           paths:
-            - go-rpm-fpm-images.tar
-  publish:
+            - /tmp/docker-cache/docker-images.tar
+  go-rpm-fpm-publish:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: /tmp/docker-cache
-      - run: ls /tmp/docker-cache
       - setup_remote_docker
       - checkout
-      - run: docker load -i /tmp/docker-cache/alpine-go-images.tar
-      - run: docker load -i /tmp/docker-cache/alpine-go-1.7-1.8-images.tar
-      - run: docker load -i /tmp/docker-cache/brew-go-images.tar
-      - run: docker load -i /tmp/docker-cache/go-1.7-1.8-images.tar
-      - run: docker load -i /tmp/docker-cache/go-darwin-linux-images.tar
-      - run: docker load -i /tmp/docker-cache/go-darwin-linux-no-cgo-images.tar
-      - run: docker load -i /tmp/docker-cache/go-docker-images.tar
-      - run: docker load -i /tmp/docker-cache/go-godel-images.tar
-      - run: docker load -i /tmp/docker-cache/go-rpm-fpm-images.tar
-      - run: |
-             docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-             go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml push
+      - run: echo 'export IMAGE=go-rpm-fpm' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-rpm-fpm-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
 
 workflows:
   version: 2
   build-publish:
     jobs:
       - alpine-go
-      - alpine-go-1.7-1.8
-      - brew-go
-      - go-1.7-1.8
-      - go-darwin-linux
-      - go-darwin-linux-no-cgo
-      - go-docker
-      - go-godel
-      - go-rpm-fpm
-      - publish:
+      - alpine-go-publish:
           requires:
             - alpine-go
+          filters:
+            branches:
+              only: /^master$/
+
+      - alpine-go-1.7-1.8
+      - alpine-go-1.7-1.8-publish:
+          requires:
             - alpine-go-1.7-1.8
+          filters:
+            branches:
+              only: /^master$/
+
+      - brew-go
+      - brew-go-publish:
+          requires:
             - brew-go
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-1.7-1.8
+      - go-1.7-1.8-publish:
+          requires:
             - go-1.7-1.8
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-darwin-linux
+      - go-darwin-linux-publish:
+          requires:
             - go-darwin-linux
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-darwin-linux-no-cgo
+      - go-darwin-linux-no-cgo-publish:
+          requires:
             - go-darwin-linux-no-cgo
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-docker
+      - go-docker-publish:
+          requires:
             - go-docker
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-godel
+      - go-godel-publish:
+          requires:
             - go-godel
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-rpm-fpm
+      - go-rpm-fpm-publish:
+          requires:
             - go-rpm-fpm
           filters:
             branches:

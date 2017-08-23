@@ -1,4 +1,4 @@
-build-id-var: CIRCLE_BUILD_NUM
+build-id-var: CUSTOM_BUILD_NUM
 tag-suffix: -t{{BuildID}}
 template-vars:
   CURRENT_GO_VERSION: 1.8.3
