@@ -5,20 +5,20 @@
 		{
 			"checksumSHA1": "BF13jP2JgYw5sTpbD5PZTEfecog=",
 			"path": "github.com/nmiyake/dockergen",
-			"revision": "d461fb97586fec4d0fdbd7bc20d56663989c18a4",
-			"revisionTime": "2017-08-24T00:52:14Z"
+			"revision": "a011fb406f7b546cd16890eecf3d8d644cdde113",
+			"revisionTime": "2017-08-24T08:22:54Z"
 		},
 		{
-			"checksumSHA1": "QkjSG39TJPzoeXK88qYbBwBVpOA=",
+			"checksumSHA1": "eLhdnGn7sBdZvzUUIif/rzFTFRI=",
 			"path": "github.com/nmiyake/dockergen/cmd",
-			"revision": "d461fb97586fec4d0fdbd7bc20d56663989c18a4",
-			"revisionTime": "2017-08-24T00:52:14Z"
+			"revision": "a011fb406f7b546cd16890eecf3d8d644cdde113",
+			"revisionTime": "2017-08-24T08:22:54Z"
 		},
 		{
-			"checksumSHA1": "6/eeDNdfFlI1zX/J+Ms+nkz3x14=",
+			"checksumSHA1": "GfRtwapyeVBTiO7PwiDwOpBpQfY=",
 			"path": "github.com/nmiyake/dockergen/dockergen",
-			"revision": "d461fb97586fec4d0fdbd7bc20d56663989c18a4",
-			"revisionTime": "2017-08-24T00:52:14Z"
+			"revision": "a011fb406f7b546cd16890eecf3d8d644cdde113",
+			"revisionTime": "2017-08-24T08:22:54Z"
 		},
 		{
 			"checksumSHA1": "rJab1YdNhQooDiBWNnt7TLWPyBU=",
