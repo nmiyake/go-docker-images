@@ -5,11 +5,11 @@ machine:
 dependencies:
   override:
     - docker info
-    - go get github.com/nmiyake/dockergen
+    - go version
 
 test:
   override:
-    - dockergen --config config.yml build
+    - go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml build
 
 deployment:
   hub:
