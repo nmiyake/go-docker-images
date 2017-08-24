@@ -11,9 +11,6 @@ template-vars:
   GO_1_7_SRC_SHA256: 1a67a4e688673fdff7ba41e73482b0e59ac5bd0f7acf703bc6d50cc775c5baba
   GO_1_7_LINUX_AMD64_SHA256: ad5808bf42b014c22dd7646458f631385003049ded0bb6af2efc7f1f79fa29ea
 builds:
-  alpine-go-1.7-1.8:
-    docker-template: alpine-go-1.7-1.8-template/Dockerfile_template.txt
-    tag: nmiyake/go:alpine-go-{{.GO_1_7_VERSION}}-{{.GO_1_8_VERSION}}
   alpine-go:
     docker-template: alpine-go-template/Dockerfile_template.txt
     tag: nmiyake/go:alpine-go-{{.GO_VERSION}}
@@ -21,6 +18,9 @@ builds:
       GO_VERSION:
         - "{{.GO_1_8_VERSION}}"
         - "{{.GO_1_7_VERSION}}"
+  alpine-go-1.7-1.8:
+    docker-template: alpine-go-1.7-1.8-template/Dockerfile_template.txt
+    tag: nmiyake/go:alpine-go-{{.GO_1_7_VERSION}}-{{.GO_1_8_VERSION}}
   brew-go:
     docker-template: brew-go/Dockerfile_template.txt
     tag: nmiyake/go:brew-go
