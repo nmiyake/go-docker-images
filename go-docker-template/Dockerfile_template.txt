@@ -1,4 +1,4 @@
-FROM golang:{{.GO_VERSION}}
+FROM golang:{{.CURRENT_GO_VERSION}}
 
 ENV DOCKER_VERSION {{.DOCKER_VERSION}}
 RUN curl -L -o /tmp/docker-$DOCKER_VERSION.tgz https://get.docker.com/builds/Linux/x86_64/docker-$DOCKER_VERSION.tgz
