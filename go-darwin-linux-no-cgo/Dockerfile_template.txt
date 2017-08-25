@@ -1,4 +1,4 @@
 FROM golang:{{.CURRENT_GO_VERSION}}
 
-RUN CGO=0 GOOS=linux GOARCH=amd64 go install std
-RUN CGO=0 GOOS=darwin GOARCH=amd64 go install std
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install std
+RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go install std

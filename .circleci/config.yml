@@ -167,6 +167,34 @@ jobs:
       - *docker-load
       - *docker-publish
 
+  go-darwin-linux-docker-rpm-fpm:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-docker-rpm-fpm' >> $BASH_ENV
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-docker-rpm-fpm-cache_key.txt" }}
+          paths:
+            - /tmp/docker-cache/docker-images.tar
+  go-darwin-linux-docker-rpm-fpm-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-docker-rpm-fpm' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-docker-rpm-fpm-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-darwin-linux-no-cgo:
     <<: *defaults
     steps:
@@ -251,34 +279,6 @@ jobs:
       - *docker-load
       - *docker-publish
 
-  go-rpm-fpm:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-rpm-fpm' >> $BASH_ENV
-      - *custom-build-num
-      - *run-docker-gen
-      - *docker-save
-      - *create-cache-key
-      - save_cache:
-          key: docker-image-{{ checksum "/tmp/go-rpm-fpm-cache_key.txt" }}
-          paths:
-            - /tmp/docker-cache/docker-images.tar
-  go-rpm-fpm-publish:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-rpm-fpm' >> $BASH_ENV
-      - *custom-build-num
-      - *create-cache-key
-      - restore_cache:
-          keys:
-            - docker-image-{{ checksum "/tmp/go-rpm-fpm-cache_key.txt" }}
-      - *docker-load
-      - *docker-publish
-
 workflows:
   version: 2
   build-publish:
@@ -323,6 +323,14 @@ workflows:
             branches:
               only: /^master$/
 
+      - go-darwin-linux-docker-rpm-fpm
+      - go-darwin-linux-docker-rpm-fpm-publish:
+          requires:
+            - go-darwin-linux-docker-rpm-fpm
+          filters:
+            branches:
+              only: /^master$/
+
       - go-darwin-linux-no-cgo
       - go-darwin-linux-no-cgo-publish:
           requires:
@@ -343,14 +351,6 @@ workflows:
       - go-godel-publish:
           requires:
             - go-godel
-          filters:
-            branches:
-              only: /^master$/
-
-      - go-rpm-fpm
-      - go-rpm-fpm-publish:
-          requires:
-            - go-rpm-fpm
           filters:
             branches:
               only: /^master$/
