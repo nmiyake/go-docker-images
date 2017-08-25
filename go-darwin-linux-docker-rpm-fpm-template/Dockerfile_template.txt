@@ -1,0 +1,30 @@
+FROM golang:{{.CURRENT_GO_VERSION}}
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install std
+RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go install std
+
+ENV DOCKER_VERSION {{.DOCKER_VERSION}}
+RUN curl -L -o /tmp/docker-$DOCKER_VERSION.tgz https://get.docker.com/builds/Linux/x86_64/docker-$DOCKER_VERSION.tgz
+RUN tar -xz -C /tmp -f /tmp/docker-$DOCKER_VERSION.tgz
+RUN  mv /tmp/docker/* /usr/bin
+
+ENV GROUP_ID 1000
+RUN groupadd --gid $GROUP_ID gogroup
+
+ENV USER_ID 1000
+RUN useradd --uid $USER_ID --gid $GROUP_ID gouser
+RUN chown -R gouser /go
+
+RUN mkdir -p /home/gouser
+RUN chown -R gouser /home/gouser
+
+RUN apt-get update
+RUN apt-get -y install rpm
+RUN apt-get -y install ruby-dev
+RUN apt-get -y install rubygems
+RUN gem install fpm
+
+USER gouser:gogroup
+
+#RUN mkdir -p $GOPATH/src/github.com/palantir && cd $_ && git clone https://github.com/palantir/godel.git && cd godel
+#RUN git clone https://github.com/palantir/godel.git && cd godel
