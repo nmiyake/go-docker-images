@@ -130,12 +130,12 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - run: echo 'export IMAGE=go-1.7-1.8' >> $BASH_ENV
+      - run: echo 'export IMAGE=go-curr-prev' >> $BASH_ENV
       - *custom-build-num
       - *create-cache-key
       - restore_cache:
           keys:
-            - docker-image-{{ checksum "/tmp/go-1.7-1.8-cache_key.txt" }}
+            - docker-image-{{ checksum "/tmp/go-curr-prev-cache_key.txt" }}
       - *docker-load
       - *docker-publish
 
