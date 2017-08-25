@@ -1,0 +1,13 @@
+FROM golang:{{.CURRENT_GO_VERSION}}
+
+RUN mv /usr/local/go /usr/local/go-{{.CURRENT_GO_VERSION}}
+RUN ln -s /usr/local/go-{{.CURRENT_GO_VERSION}} /usr/local/go
+
+ENV GOLANG_PREVIOUS_DOWNLOAD_URL https://golang.org/dl/go{{.PREVIOUS_GO_VERSION}}.linux-amd64.tar.gz
+ENV GOLANG_PREVIOUS_DOWNLOAD_SHA256 {{.PREVIOUS_GO_LINUX_AMD64_SHA256}}
+
+RUN curl -fsSL "$GOLANG_PREVIOUS_DOWNLOAD_URL" -o golang.tar.gz \
+  && echo "$GOLANG_PREVIOUS_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+  && tar -C /tmp -xzf golang.tar.gz \
+  && rm golang.tar.gz \
+  && mv /tmp/go /usr/local/go-{{.PREVIOUS_GO_VERSION}}
