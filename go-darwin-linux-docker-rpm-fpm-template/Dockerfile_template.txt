@@ -25,6 +25,3 @@ RUN apt-get -y install rubygems
 RUN gem install fpm
 
 USER gouser:gogroup
-
-#RUN mkdir -p $GOPATH/src/github.com/palantir && cd $_ && git clone https://github.com/palantir/godel.git && cd godel
-#RUN git clone https://github.com/palantir/godel.git && cd godel
