@@ -32,7 +32,7 @@ builds:
     tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}
   go-darwin-linux-docker-rpm-fpm:
     docker-template: go-darwin-linux-docker-rpm-fpm-template/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-rpm-fpm-template
+    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-rpm-fpm
   go-darwin-linux-no-cgo:
     docker-template: go-darwin-linux-no-cgo/Dockerfile_template.txt
     tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}
