@@ -55,34 +55,6 @@ jobs:
       - *docker-load
       - *docker-publish
 
-  alpine-go-curr-prev:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=alpine-go-curr-prev' >> $BASH_ENV
-      - *custom-build-num
-      - *run-docker-gen
-      - *docker-save
-      - *create-cache-key
-      - save_cache:
-          key: docker-image-{{ checksum "/tmp/alpine-go-curr-prev-cache_key.txt" }}
-          paths:
-            - /tmp/docker-cache/docker-images.tar
-  alpine-go-curr-prev-publish:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=alpine-go-curr-prev' >> $BASH_ENV
-      - *custom-build-num
-      - *create-cache-key
-      - restore_cache:
-          keys:
-            - docker-image-{{ checksum "/tmp/alpine-go-curr-prev-cache_key.txt" }}
-      - *docker-load
-      - *docker-publish
-
   brew-go:
     <<: *defaults
     steps:
@@ -108,34 +80,6 @@ jobs:
       - restore_cache:
           keys:
             - docker-image-{{ checksum "/tmp/brew-go-cache_key.txt" }}
-      - *docker-load
-      - *docker-publish
-
-  go-curr-prev:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-curr-prev' >> $BASH_ENV
-      - *custom-build-num
-      - *run-docker-gen
-      - *docker-save
-      - *create-cache-key
-      - save_cache:
-          key: docker-image-{{ checksum "/tmp/go-curr-prev-cache_key.txt" }}
-          paths:
-            - /tmp/docker-cache/docker-images.tar
-  go-curr-prev-publish:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-curr-prev' >> $BASH_ENV
-      - *custom-build-num
-      - *create-cache-key
-      - restore_cache:
-          keys:
-            - docker-image-{{ checksum "/tmp/go-curr-prev-cache_key.txt" }}
       - *docker-load
       - *docker-publish
 
@@ -291,26 +235,10 @@ workflows:
             branches:
               only: /^master$/
 
-      - alpine-go-curr-prev
-      - alpine-go-curr-prev-publish:
-          requires:
-            - alpine-go-curr-prev
-          filters:
-            branches:
-              only: /^master$/
-
       - brew-go
       - brew-go-publish:
           requires:
             - brew-go
-          filters:
-            branches:
-              only: /^master$/
-
-      - go-curr-prev
-      - go-curr-prev-publish:
-          requires:
-            - go-curr-prev
           filters:
             branches:
               only: /^master$/

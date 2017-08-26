@@ -19,15 +19,9 @@ builds:
       GO_VERSION:
         - "{{.GO_1_9_VERSION}}"
         - "{{.GO_1_8_VERSION}}"
-  alpine-go-curr-prev:
-    docker-template: alpine-go-curr-prev-template/Dockerfile_template.txt
-    tag: nmiyake/go:alpine-go-{{.GO_1_9_VERSION}}-{{.GO_1_8_VERSION}}
   brew-go:
     docker-template: brew-go/Dockerfile_template.txt
     tag: nmiyake/go:brew-go
-  go-curr-prev:
-    docker-template: go-curr-prev-template/Dockerfile_template.txt
-    tag: nmiyake/go:go-{{.GO_1_9_VERSION}}-{{.GO_1_8_VERSION}}
   go-darwin-linux:
     docker-template: go-darwin-linux/Dockerfile_template.txt
     tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}
