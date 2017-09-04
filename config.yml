@@ -34,6 +34,3 @@ builds:
   go-docker:
     docker-template: go-docker-template/Dockerfile_template.txt
     tag: nmiyake/go:go-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}
-  go-godel:
-    docker-template: go-godel/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-godel-{{.GODEL_VERSION}}
