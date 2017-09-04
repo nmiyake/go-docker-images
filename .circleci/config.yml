@@ -195,34 +195,6 @@ jobs:
       - *docker-load
       - *docker-publish
 
-  go-godel:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-godel' >> $BASH_ENV
-      - *custom-build-num
-      - *run-docker-gen
-      - *docker-save
-      - *create-cache-key
-      - save_cache:
-          key: docker-image-{{ checksum "/tmp/go-godel-cache_key.txt" }}
-          paths:
-            - /tmp/docker-cache/docker-images.tar
-  go-godel-publish:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-godel' >> $BASH_ENV
-      - *custom-build-num
-      - *create-cache-key
-      - restore_cache:
-          keys:
-            - docker-image-{{ checksum "/tmp/go-godel-cache_key.txt" }}
-      - *docker-load
-      - *docker-publish
-
 workflows:
   version: 2
   build-publish:
@@ -271,14 +243,6 @@ workflows:
       - go-docker-publish:
           requires:
             - go-docker
-          filters:
-            branches:
-              only: /^master$/
-
-      - go-godel
-      - go-godel-publish:
-          requires:
-            - go-godel
           filters:
             branches:
               only: /^master$/
