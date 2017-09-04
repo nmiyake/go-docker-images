@@ -1,6 +1,6 @@
 FROM linuxbrew/linuxbrew:latest
 
-RUN brew install --devel go
+RUN brew install go
 
 RUN sudo mkdir /go
 RUN sudo chown -R $(whoami):$(whoami) /go
