@@ -1,9 +1,0 @@
-FROM golang:{{.CURRENT_GO_VERSION}}
-
-RUN GOOS=darwin GOARCH=amd64 go install std
-
-RUN mkdir -p /root/.godel/downloads
-RUN curl -L "https://palantir.bintray.com/releases/com/palantir/godel/godel/{{.GODEL_VERSION}}/godel-{{.GODEL_VERSION}}.tgz" -o /root/.godel/downloads/godel-{{.GODEL_VERSION}}.tgz
-
-RUN mkdir -p /root/.godel/dists
-RUN tar -xvf /root/.godel/downloads/godel-{{.GODEL_VERSION}}.tgz -C /root/.godel/dists/
