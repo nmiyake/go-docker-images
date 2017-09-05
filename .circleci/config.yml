@@ -23,7 +23,7 @@ docker-load: &docker-load
 docker-publish: &docker-publish
   run: |
        docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-       go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml push $IMAGE
+       go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml --no-deps push $IMAGE
 
 version: 2
 jobs:
@@ -111,42 +111,19 @@ jobs:
       - *docker-load
       - *docker-publish
 
-  go-darwin-linux-docker-rpm-fpm:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-darwin-linux-docker-rpm-fpm' >> $BASH_ENV
-      - *custom-build-num
-      - *run-docker-gen
-      - *docker-save
-      - *create-cache-key
-      - save_cache:
-          key: docker-image-{{ checksum "/tmp/go-darwin-linux-docker-rpm-fpm-cache_key.txt" }}
-          paths:
-            - /tmp/docker-cache/docker-images.tar
-  go-darwin-linux-docker-rpm-fpm-publish:
-    <<: *defaults
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run: echo 'export IMAGE=go-darwin-linux-docker-rpm-fpm' >> $BASH_ENV
-      - *custom-build-num
-      - *create-cache-key
-      - restore_cache:
-          keys:
-            - docker-image-{{ checksum "/tmp/go-darwin-linux-docker-rpm-fpm-cache_key.txt" }}
-      - *docker-load
-      - *docker-publish
-
   go-darwin-linux-java-ruby-netcat:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
+      - run: echo "go-darwin-linux-$CIRCLE_SHA1" > /tmp/go-darwin-linux-cache_key.txt
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-cache_key.txt" }}
+      - *docker-load
       - run: echo 'export IMAGE=go-darwin-linux-java-ruby-netcat' >> $BASH_ENV
       - *custom-build-num
-      - *run-docker-gen
+      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml --no-deps build $IMAGE
       - *docker-save
       - *create-cache-key
       - save_cache:
@@ -192,6 +169,39 @@ jobs:
       - restore_cache:
           keys:
             - docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
+  go-darwin-linux-no-cgo-docker-rpm-fpm:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo "go-darwin-linux-no-cgo-$CIRCLE_SHA1" > /tmp/go-darwin-linux-no-cgo-cache_key.txt
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-cache_key.txt" }}
+      - *docker-load
+      - run: echo 'export IMAGE=go-darwin-linux-no-cgo-docker-rpm-fpm' >> $BASH_ENV
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-docker-rpm-fpm-cache_key.txt" }}
+          paths:
+            - /tmp/docker-cache/docker-images.tar
+  go-darwin-linux-no-cgo-docker-rpm-fpm-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-no-cgo-docker-rpm-fpm' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-docker-rpm-fpm-cache_key.txt" }}
       - *docker-load
       - *docker-publish
 
@@ -251,15 +261,9 @@ workflows:
             branches:
               only: /^master$/
 
-      - go-darwin-linux-docker-rpm-fpm
-      - go-darwin-linux-docker-rpm-fpm-publish:
+      - go-darwin-linux-java-ruby-netcat:
           requires:
-            - go-darwin-linux-docker-rpm-fpm
-          filters:
-            branches:
-              only: /^master$/
-
-      - go-darwin-linux-java-ruby-netcat
+            - go-darwin-linux
       - go-darwin-linux-java-ruby-netcat-publish:
           requires:
             - go-darwin-linux-java-ruby-netcat
@@ -271,6 +275,16 @@ workflows:
       - go-darwin-linux-no-cgo-publish:
           requires:
             - go-darwin-linux-no-cgo
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-darwin-linux-no-cgo-docker-rpm-fpm:
+          requires:
+            - go-darwin-linux-no-cgo
+      - go-darwin-linux-no-cgo-docker-rpm-fpm-publish:
+          requires:
+            - go-darwin-linux-no-cgo-docker-rpm-fpm
           filters:
             branches:
               only: /^master$/
