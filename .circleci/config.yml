@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: /go/src/github.com/nmiyake/go-docker-images
   docker:
-    - image: nmiyake/go:go-1.8.3-docker-17.03.0-ce-t52
+    - image: nmiyake/go:go-1.9-docker-17.03.0-ce-t115
 
 custom-build-num: &custom-build-num
   run: echo "export CUSTOM_BUILD_NUM=$(($(git rev-list --count HEAD)+80))" >> $BASH_ENV
