@@ -139,6 +139,34 @@ jobs:
       - *docker-load
       - *docker-publish
 
+  go-darwin-linux-java-ruby-netcat:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-java-ruby-netcat' >> $BASH_ENV
+      - *custom-build-num
+      - *run-docker-gen
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-java-ruby-netcat-cache_key.txt" }}
+          paths:
+            - /tmp/docker-cache/docker-images.tar
+  go-darwin-linux-java-ruby-netcat-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-java-ruby-netcat' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-java-ruby-netcat-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-darwin-linux-no-cgo:
     <<: *defaults
     steps:
@@ -227,6 +255,14 @@ workflows:
       - go-darwin-linux-docker-rpm-fpm-publish:
           requires:
             - go-darwin-linux-docker-rpm-fpm
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-darwin-linux-java-ruby-netcat
+      - go-darwin-linux-java-ruby-netcat-publish:
+          requires:
+            - go-darwin-linux-java-ruby-netcat
           filters:
             branches:
               only: /^master$/
