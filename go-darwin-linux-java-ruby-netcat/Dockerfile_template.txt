@@ -1,0 +1,5 @@
+FROM {{Tag "go-darwin-linux" 0 0}}
+
+RUN apt-get update && apt-get -y install ruby-full default-jre netcat-openbsd
+
+ENV JAVA_HOME /usr/lib/jvm/default-java
