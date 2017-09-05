@@ -111,6 +111,39 @@ jobs:
       - *docker-load
       - *docker-publish
 
+  go-darwin-linux-docker-bsdtar-unzip:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo "go-darwin-linux-$CIRCLE_SHA1" > /tmp/go-darwin-linux-cache_key.txt
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-cache_key.txt" }}
+      - *docker-load
+      - run: echo 'export IMAGE=go-darwin-linux-docker-bsdtar-unzip' >> $BASH_ENV
+      - *custom-build-num
+      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml --no-deps build $IMAGE
+      - *docker-save
+      - *create-cache-key
+      - save_cache:
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-docker-bsdtar-unzip-cache_key.txt" }}
+          paths:
+            - /tmp/docker-cache/docker-images.tar
+  go-darwin-linux-docker-bsdtar-unzip-publish:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run: echo 'export IMAGE=go-darwin-linux-docker-bsdtar-unzip' >> $BASH_ENV
+      - *custom-build-num
+      - *create-cache-key
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-docker-bsdtar-unzip-cache_key.txt" }}
+      - *docker-load
+      - *docker-publish
+
   go-darwin-linux-java-ruby-netcat:
     <<: *defaults
     steps:
@@ -257,6 +290,16 @@ workflows:
       - go-darwin-linux-publish:
           requires:
             - go-darwin-linux
+          filters:
+            branches:
+              only: /^master$/
+
+      - go-darwin-linux-docker-bsdtar-unzip:
+          requires:
+            - go-darwin-linux
+      - go-darwin-linux-docker-bsdtar-unzip-publish:
+          requires:
+            - go-darwin-linux-docker-bsdtar-unzip
           filters:
             branches:
               only: /^master$/
