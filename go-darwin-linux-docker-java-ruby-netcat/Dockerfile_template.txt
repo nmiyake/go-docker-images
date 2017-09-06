@@ -1,6 +1,8 @@
 FROM {{Tag "go-darwin-linux" 0 0}}
 
-RUN apt-get update && apt-get -y install bsdtar unzip
+RUN apt-get update && apt-get -y install ruby-full default-jre netcat-openbsd
+
+ENV JAVA_HOME /usr/lib/jvm/default-java
 
 ENV DOCKER_VERSION {{.DOCKER_VERSION}}
 RUN curl -L -o /tmp/docker-$DOCKER_VERSION.tgz https://get.docker.com/builds/Linux/x86_64/docker-$DOCKER_VERSION.tgz
