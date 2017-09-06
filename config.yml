@@ -30,9 +30,9 @@ builds:
     tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-bsdtar-unzip
     requires:
       - go-darwin-linux
-  go-darwin-linux-java-ruby-netcat:
-    docker-template: go-darwin-linux-java-ruby-netcat/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-java-ruby-netcat
+  go-darwin-linux-docker-java-ruby-netcat:
+    docker-template: go-darwin-linux-docker-java-ruby-netcat/Dockerfile_template.txt
+    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-java-ruby-netcat
     requires:
       - go-darwin-linux
   go-darwin-linux-no-cgo:

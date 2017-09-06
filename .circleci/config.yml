@@ -144,7 +144,7 @@ jobs:
       - *docker-load
       - *docker-publish
 
-  go-darwin-linux-java-ruby-netcat:
+  go-darwin-linux-docker-java-ruby-netcat:
     <<: *defaults
     steps:
       - setup_remote_docker
@@ -154,26 +154,26 @@ jobs:
           keys:
             - docker-image-{{ checksum "/tmp/go-darwin-linux-cache_key.txt" }}
       - *docker-load
-      - run: echo 'export IMAGE=go-darwin-linux-java-ruby-netcat' >> $BASH_ENV
+      - run: echo 'export IMAGE=go-darwin-linux-docker-java-ruby-netcat' >> $BASH_ENV
       - *custom-build-num
       - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml --no-deps build $IMAGE
       - *docker-save
       - *create-cache-key
       - save_cache:
-          key: docker-image-{{ checksum "/tmp/go-darwin-linux-java-ruby-netcat-cache_key.txt" }}
+          key: docker-image-{{ checksum "/tmp/go-darwin-linux-docker-java-ruby-netcat-cache_key.txt" }}
           paths:
             - /tmp/docker-cache/docker-images.tar
-  go-darwin-linux-java-ruby-netcat-publish:
+  go-darwin-linux-docker-java-ruby-netcat-publish:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
-      - run: echo 'export IMAGE=go-darwin-linux-java-ruby-netcat' >> $BASH_ENV
+      - run: echo 'export IMAGE=go-darwin-linux-docker-java-ruby-netcat' >> $BASH_ENV
       - *custom-build-num
       - *create-cache-key
       - restore_cache:
           keys:
-            - docker-image-{{ checksum "/tmp/go-darwin-linux-java-ruby-netcat-cache_key.txt" }}
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-docker-java-ruby-netcat-cache_key.txt" }}
       - *docker-load
       - *docker-publish
 
@@ -304,12 +304,12 @@ workflows:
             branches:
               only: /^master$/
 
-      - go-darwin-linux-java-ruby-netcat:
+      - go-darwin-linux-docker-java-ruby-netcat:
           requires:
             - go-darwin-linux
-      - go-darwin-linux-java-ruby-netcat-publish:
+      - go-darwin-linux-docker-java-ruby-netcat-publish:
           requires:
-            - go-darwin-linux-java-ruby-netcat
+            - go-darwin-linux-docker-java-ruby-netcat
           filters:
             branches:
               only: /^master$/
