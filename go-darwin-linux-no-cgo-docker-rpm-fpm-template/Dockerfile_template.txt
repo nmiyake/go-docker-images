@@ -1,9 +1,8 @@
 FROM {{Tag "go-darwin-linux-no-cgo" 0 0}}
 
-ENV DOCKER_VERSION {{.DOCKER_VERSION}}
-RUN curl -L -o /tmp/docker-$DOCKER_VERSION.tgz https://get.docker.com/builds/Linux/x86_64/docker-$DOCKER_VERSION.tgz
-RUN tar -xz -C /tmp -f /tmp/docker-$DOCKER_VERSION.tgz
-RUN  mv /tmp/docker/* /usr/bin
+ENV VERSION {{.DOCKER_VERSION}}
+RUN curl -fsSL get.docker.com -o get-docker.sh
+RUN sh get-docker.sh
 
 ENV GROUP_ID 1000
 RUN groupadd --gid $GROUP_ID gogroup
