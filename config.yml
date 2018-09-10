@@ -17,8 +17,8 @@ builds:
     tag: nmiyake/go:alpine-go-{{.GO_VERSION}}
     for:
       GO_VERSION:
-        - "{{.GO_1_10_VERSION}}"
-        - "{{.GO_1_9_VERSION}}"
+        - "{{.CURRENT_GO_VERSION}}"
+        - "{{.PREVIOUS_GO_VERSION}}"
   alpine-go-java-8u171:
     docker-template: alpine-go-java-8u171-template/Dockerfile_template.txt
     tag: nmiyake/go:alpine-go-{{.CURRENT_GO_VERSION}}-java-8u171
