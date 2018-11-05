@@ -55,7 +55,7 @@ jobs:
       - *docker-load
       - *docker-publish
 
-  alpine-go-java-8u171:
+  alpine-go-java-8u181:
     <<: *defaults
     steps:
       - setup_remote_docker
@@ -65,26 +65,26 @@ jobs:
           keys:
             - docker-image-{{ checksum "/tmp/alpine-go-cache_key.txt" }}
       - *docker-load
-      - run: echo 'export IMAGE=alpine-go-java-8u171' >> $BASH_ENV
+      - run: echo 'export IMAGE=alpine-go-java-8u181' >> $BASH_ENV
       - *custom-build-num
       - *run-docker-gen
       - *docker-save
       - *create-cache-key
       - save_cache:
-          key: docker-image-{{ checksum "/tmp/alpine-go-java-8u171-cache_key.txt" }}
+          key: docker-image-{{ checksum "/tmp/alpine-go-java-8u181-cache_key.txt" }}
           paths:
             - /tmp/docker-cache/docker-images.tar
-  alpine-go-java-8u171-publish:
+  alpine-go-java-8u181-publish:
     <<: *defaults
     steps:
       - setup_remote_docker
       - checkout
-      - run: echo 'export IMAGE=alpine-go-java-8u171' >> $BASH_ENV
+      - run: echo 'export IMAGE=alpine-go-java-8u181' >> $BASH_ENV
       - *custom-build-num
       - *create-cache-key
       - restore_cache:
           keys:
-            - docker-image-{{ checksum "/tmp/alpine-go-java-8u171-cache_key.txt" }}
+            - docker-image-{{ checksum "/tmp/alpine-go-java-8u181-cache_key.txt" }}
       - *docker-load
       - *docker-publish
 
@@ -311,12 +311,12 @@ workflows:
             branches:
               only: /^master$/
 
-      - alpine-go-java-8u171:
+      - alpine-go-java-8u181:
           requires:
             - alpine-go
-      - alpine-go-java-8u171-publish:
+      - alpine-go-java-8u181-publish:
           requires:
-            - alpine-go-java-8u171
+            - alpine-go-java-8u181
           filters:
             branches:
               only: /^master$/
