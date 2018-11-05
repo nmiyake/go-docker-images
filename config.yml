@@ -19,9 +19,9 @@ builds:
       GO_VERSION:
         - "{{.CURRENT_GO_VERSION}}"
         - "{{.PREVIOUS_GO_VERSION}}"
-  alpine-go-java-8u171:
-    docker-template: alpine-go-java-8u171-template/Dockerfile_template.txt
-    tag: nmiyake/go:alpine-go-{{.CURRENT_GO_VERSION}}-java-8u171
+  alpine-go-java-8u181:
+    docker-template: alpine-go-java-8u181-template/Dockerfile_template.txt
+    tag: nmiyake/go:alpine-go-{{.CURRENT_GO_VERSION}}-java-8u181
     requires:
       - alpine-go
   brew-go:
