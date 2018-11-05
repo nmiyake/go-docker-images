@@ -9,9 +9,9 @@ alpine-go-{{LATEST_GO_VERSION}}-t{{tag#}}, alpine-go-{{PREVIOUS_GO_VERSION}}-t{{
 --------------------------------------------------------------------------------------
 Docker images based on `golang:<version>-alpine` images that also have `bash`, `git` and `openssl` installed.
 
-alpine-go-{{LATEST_GO_VERSION}}-java-8u171-t{{tag#}}
+alpine-go-{{LATEST_GO_VERSION}}-java-8u181-t{{tag#}}
 --------------------------------------------------------------------------------------
-Docker images based on the `alpine-go-{{LATEST_GO_VERSION}}-t{{tag#}}` image that also has Java 8u171 from OpenJDK.
+Docker images based on the `alpine-go-{{LATEST_GO_VERSION}}-t{{tag#}}` image that also has Java 8u181 from OpenJDK.
 
 go-darwin-linux-{{LATEST_GO_VERSION}}-{{tag#}}
 ----------------------------------------------
