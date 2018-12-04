@@ -243,9 +243,14 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - run: echo "go-darwin-linux-no-cgo-$CIRCLE_SHA1" > /tmp/go-darwin-linux-no-cgo-cache_key.txt
+      - restore_cache:
+          keys:
+            - docker-image-{{ checksum "/tmp/go-darwin-linux-no-cgo-cache_key.txt" }}
+      - *docker-load
       - run: echo 'export IMAGE=go-darwin-linux-no-cgo-java-8u181' >> $BASH_ENV
       - *custom-build-num
-      - *run-docker-gen
+      - run: go run ./vendor/github.com/nmiyake/dockergen/main.go --config config.yml --no-deps build $IMAGE
       - *docker-save
       - *create-cache-key
       - save_cache:
@@ -393,7 +398,9 @@ workflows:
             branches:
               only: /^master$/
 
-      - go-darwin-linux-no-cgo-java-8u181
+      - go-darwin-linux-no-cgo-java-8u181:
+          requires:
+            - go-darwin-linux-no-cgo
       - go-darwin-linux-no-cgo-java-8u181-publish:
           requires:
             - go-darwin-linux-no-cgo-java-8u181
