@@ -48,6 +48,11 @@ builds:
     tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}-java-8u181
     requires:
       - go-darwin-linux-no-cgo
+  go-darwin-linux-no-cgo-java-11:
+    docker-template: go-darwin-linux-no-cgo-java-11/Dockerfile_template.txt
+    tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}-java-11
+    requires:
+      - go-darwin-linux-no-cgo
   go-darwin-linux-no-cgo-docker-rpm-fpm:
     docker-template: go-darwin-linux-no-cgo-docker-rpm-fpm-template/Dockerfile_template.txt
     tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-rpm-fpm
