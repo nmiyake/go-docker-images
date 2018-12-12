@@ -1,6 +1,5 @@
 go-docker-images
 ================
-
 Docker images for Go.
 
 See https://hub.docker.com/r/nmiyake/go/tags/ for the latest published images.

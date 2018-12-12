@@ -1,9 +1,0 @@
-FROM {{Tag "go-darwin-linux" 0 0}}
-
-RUN apt-get update && apt-get -y install ruby-full default-jdk netcat-openbsd
-
-ENV JAVA_HOME /usr/lib/jvm/default-java
-
-ENV VERSION {{.DOCKER_VERSION}}
-RUN curl -fsSL get.docker.com -o get-docker.sh
-RUN sh get-docker.sh
