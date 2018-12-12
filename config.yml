@@ -30,16 +30,6 @@ builds:
   go-darwin-linux:
     docker-template: go-darwin-linux/Dockerfile_template.txt
     tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}
-  go-darwin-linux-docker-bsdtar-unzip:
-    docker-template: go-darwin-linux-docker-bsdtar-unzip/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-bsdtar-unzip
-    requires:
-      - go-darwin-linux
-  go-darwin-linux-docker-java-ruby-netcat:
-    docker-template: go-darwin-linux-docker-java-ruby-netcat/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-java-ruby-netcat
-    requires:
-      - go-darwin-linux
   go-darwin-linux-no-cgo:
     docker-template: go-darwin-linux-no-cgo/Dockerfile_template.txt
     tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}
@@ -51,11 +41,6 @@ builds:
   go-darwin-linux-no-cgo-java-11:
     docker-template: go-darwin-linux-no-cgo-java-11/Dockerfile_template.txt
     tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}-java-11
-    requires:
-      - go-darwin-linux-no-cgo
-  go-darwin-linux-no-cgo-docker-rpm-fpm:
-    docker-template: go-darwin-linux-no-cgo-docker-rpm-fpm-template/Dockerfile_template.txt
-    tag: nmiyake/go:go-darwin-linux-no-cgo-{{.CURRENT_GO_VERSION}}-docker-{{.DOCKER_VERSION}}-rpm-fpm
     requires:
       - go-darwin-linux-no-cgo
   go-docker:
