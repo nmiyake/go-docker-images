@@ -26,6 +26,10 @@ go-darwin-linux-no-cgo-{{LATEST_GO_VERSION}}-java-8u181-t{{tag#}}
 -----------------------------------------------------------------
 Docker image based on the `go-darwin-linux-no-cgo-{{LATEST_GO_VERSION}}-t{{tag#}}` image that also has Java 8u181 from OpenJDK.
 
+go-darwin-linux-no-cgo-{{LATEST_GO_VERSION}}-java-11-t{{tag#}}
+--------------------------------------------------------------
+Docker image based on the `go-darwin-linux-no-cgo-{{LATEST_GO_VERSION}}-t{{tag#}}` image that also has Java 11 from OpenJDK.
+
 brew-go-t{{tag#}}
 -----------------
 Docker image with Go installed using `brew` on Linux. Useful for testing that Go tools and programs behave properly on systems
